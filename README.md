@@ -45,13 +45,17 @@
 1. Clone the repo manually by running the following command in the terminal:
    
         git clone https://github.com/dungnacmc/json-transform.git
-
-2. Build:
-
+        
+2. Generate .env file and create application key:
         cd json-transform
+        php -r "copy('.env.example', '.env');"
+        php artisan key:generate
+
+3. Build:
+  
         docker-compose build
         
-2. Run containers:
+4. Run containers:
 
         docker-compose up
         
