@@ -19,6 +19,9 @@ COPY --chown=www-data:www-data . /var/www/html
 
 RUN composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --no-dev --optimize-autoloader
 
+RUN chgrp -R www-data storage bootstrap/cache \
+    && chmod -R ug+rwx storage bootstrap/cache
+
 WORKDIR /var/www/html
 
 
