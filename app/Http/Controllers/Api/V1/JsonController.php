@@ -8,6 +8,6 @@ use Illuminate\Http\Request;
 class JsonController extends Controller
 {
     public function transform(Request $request) {
-		$data = $request->route('pattern');
-	}
+        $data = $request->route('pattern');
+    }
 }

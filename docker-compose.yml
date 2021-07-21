@@ -1,12 +1,7 @@
 version: "3"
 
 services:
-  redis:
-    container_name: ${APP_NAME}-redis
-    image: "redis:alpine"
-    networks:
-      - default
-     
+
   php:
     container_name: ${APP_NAME}-php
     build:
@@ -14,13 +9,11 @@ services:
       dockerfile: ./.docker/php/Dockerfile
     volumes:
       - ./:/var/www/html
-    depends_on:
-      - redis
     environment:
       - APP_ENV=local
     networks:
       - default
-      
+
   nginx:
     container_name: ${APP_NAME}-nginx
     build:

@@ -37,6 +37,8 @@
        sudo chgrp -R www-data storage bootstrap/cache
        sudo chmod -R ug+rwx storage bootstrap/cache
 
+Run in browser: http://localhost
+
 ## Installation (Docker)		
 ### Prerequisites
 * [Docker](https://docs.docker.com/install/)
@@ -45,12 +47,12 @@
 1. Clone the repo manually by running the following command in the terminal:
    
         git clone https://github.com/dungnacmc/json-transform.git
-        
+
 2. Generate .env file and create application key:
-        cd json-transform
+
         php -r "copy('.env.example', '.env');"
         php artisan key:generate
-
+   
 3. Build:
   
         docker-compose build
