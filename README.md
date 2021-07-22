@@ -37,6 +37,10 @@
        sudo chgrp -R www-data storage bootstrap/cache
        sudo chmod -R ug+rwx storage bootstrap/cache
 
+5. Run test:
+   
+        php artisan test
+
 Run in browser: http://localhost
 
 ## Installation (Docker)		
@@ -48,21 +52,30 @@ Run in browser: http://localhost
    
         git clone https://github.com/dungnacmc/json-transform.git
 
-2. Generate .env file and create application key:
-
-        php -r "copy('.env.example', '.env');"
-        php artisan key:generate
-   
-3. Build:
+2. Build (first time):
   
         docker-compose build
         
-4. Run containers:
+3. Run containers:
 
-        docker-compose up
+        docker-compose up -d
+
+4. Install dependencies:
+
+        docker-compose exec php composer install
+     
+5. Generate .env file and create application key:
+
+        docker-compose exec php php -r "copy('.env.example', '.env');"
+        docker-compose exec php php artisan key:generate
+
+6. Other commands:
         
-        Other useful commands:
+        docker-compose exec php php artisan test (run test)
+   
         docker-compose stop (stop running containers)
+   
         docker-compose down (remove running containers)
-    
-Run in browser: https://localhost
+
+
+Run in browser: https://localhost (click on Advanced then Proceed to localhost (unsafe) )
