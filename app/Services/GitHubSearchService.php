@@ -14,10 +14,11 @@ class GitHubSearchService
      * @param string $seekMethod
      * @return array
      */
-    function getDataSearch(int $page = 0, int $perPage = 0, string $seekMethod = ''): array
+    public function getDataSearch(int $page = 0, int $perPage = 0, string $seekMethod = ''): array
     {
         $strPage = '';
         $strPerPage = '';
+
         if ($perPage !== 0) {
             $strPerPage = '&per_page=' . $perPage;
         }
@@ -30,13 +31,16 @@ class GitHubSearchService
             $url = str_replace($charReplace, '', $url);
             $response = Http::get($url);
         } else {
-            $response = Http::get('https://api.github.com/search/code?q=addClass+user:mozilla' . $strPerPage . $strPage);
+            $url = config('app.github.search');
+            $response = Http::get($url . 'repositories?q=language:php&sort=stars' . $strPerPage . $strPage);
         }
+
         $links = Header::parse($response->header('Link'));
         $paginationInfo =  $this->getInfoPagination($links);
         preg_match('/&page=(\d+).*$/', $paginationInfo['last_page_href'], $numberOfPages);
         $body = json_decode($response->body());
         session(['page_info' => $this->getInfoPagination($links)]);
+
         return [
             'total_count'       => $body->total_count ?? 0,
             'items'             => $body->items ?? [],
@@ -45,16 +49,17 @@ class GitHubSearchService
     }
 
     /**
-     * get url of pagination
+     * Get url of pagination
      * @param mixed $links
      * @return array
      */
-    function getInfoPagination($links): array
+    public function getInfoPagination($links): array
     {
         $prevPageHref = '';
         $nextPageHref = '';
         $lastPageHref = '';
         $firstPageHref = '';
+
         foreach ($links as $link) {
             if ($link['rel'] == 'prev') {
                 $prevPageHref = $link[0];
@@ -66,6 +71,7 @@ class GitHubSearchService
                 $firstPageHref = $link[0];
             }
         }
+
         return [
             'prev_page_href'  => $prevPageHref,
             'next_page_href'  => $nextPageHref,

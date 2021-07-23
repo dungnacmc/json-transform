@@ -14,10 +14,10 @@ class GitHubSearchController extends Controller
      * @param GitHubSearchService $gitHubSearchService
      * @return View
      */
-    public function index(PaginationRequest $request, GitHubSearchService $gitHubSearchService)
+    public function index(PaginationRequest $request, GitHubSearchService $gitHubSearchService): View
     {
         $page           = $request->page ?? 1;
-        $itemPerPage    = $request->item_per_page ?? 10;
+        $itemPerPage    = $request->item_per_page ?? config('app.github.per_page');
         $seekMethod     = $request->seek_method ?? '';
         $data           = $gitHubSearchService->getDataSearch($page, $itemPerPage, $seekMethod);
         $dataResponse = [
