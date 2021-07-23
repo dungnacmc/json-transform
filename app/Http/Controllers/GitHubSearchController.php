@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\PaginationRequest;
 use App\Services\GitHubSearchService;
 
 class GitHubSearchController extends Controller
 {
+    /**
+     * return a view of pagination
+     * @param PaginationRequest $request
+     * @param GitHubSearchService $gitHubSearchService
+     * @return JsonResponse
+     */
     public function index(PaginationRequest $request, GitHubSearchService $gitHubSearchService)
     {
         $page = $request->page ?? 1;
