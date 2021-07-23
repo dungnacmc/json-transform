@@ -84,3 +84,7 @@ Run in browser: http://localhost
 
 
 Run in browser: https://localhost (click on Advanced then Proceed to localhost (unsafe) )
+
+## API Document
+
+Refer to file docs/API.md
