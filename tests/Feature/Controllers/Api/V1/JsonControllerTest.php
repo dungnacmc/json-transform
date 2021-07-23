@@ -71,8 +71,22 @@ class JsonControllerTest extends TestCase
      */
     public function testTransform()
     {
-        $json = '{"0": [{"id": 10, "title": "House", "level": 0, "children": [], "parent_id": null}], "1": [{"id": 12, "title": "Red Roof", "level": 1, "children": [], "parent_id": 10}, {"id": 18, "title": "Blue Roof", "level": 1, "children": [], "parent_id": 10}, {"id": 13, "title": "Wall", "level": 1, "children": [], "parent_id": 10}], "2": [{"id": 17, "title": "Blue Window", "level": 2, "children": [], "parent_id": 12}, {"id": 16, "title": "Door", "level": 2, "children": [], "parent_id": 13}, {"id": 15, "title": "Red Window", "level": 2, "children": [], "parent_id": 12}]}';
-        $response = $this->getJson('/api/v1/json/' . $json);
+        $json = '{"0": [{"id": 10, "title": "House", "level": 0, "children": [], "parent_id": null}], "1": [{"id": 12,
+        "title": "Red Roof", "level": 1, "children": [], "parent_id": 10}, {"id": 18, "title": "Blue Roof", "level": 1,
+        "children": [], "parent_id": 10}, {"id": 13, "title": "Wall", "level": 1, "children": [], "parent_id": 10}],
+        "2": [{"id": 17, "title": "Blue Window", "level": 2, "children": [], "parent_id": 12}, {"id": 16, "title": "Door",
+        "level": 2, "children": [], "parent_id": 13}, {"id": 15, "title": "Red Window", "level": 2, "children": [],
+        "parent_id": 12}]}';
+        
+        $response = $this->getJson('/api/v1/json/' . str_replace(PHP_EOL, '', $json));
+
+        $children = str_replace(PHP_EOL, '', '[{"id": 12, "title": "Red Roof", "level": 1,
+        "children": [{"id": 17, "title": "Blue Window", "level": 2, "children": [], "parent_id": 12}, {"id": 15,
+        "title": "Red Window", "level": 2, "children": [], "parent_id": 12}], "parent_id": 10},
+        {"id": 18, "title": "Blue Roof", "level": 1, "children": [],
+        "parent_id": 10}, {"id": 13, "title": "Wall", "level": 1, "children": [{"id": 16, "title": "Door", "level": 2,
+        "children": [], "parent_id": 13}], "parent_id": 10}]');
+
 
         $response->assertJson(fn (AssertableJson $json) =>
         $json->has(1)
@@ -80,7 +94,8 @@ class JsonControllerTest extends TestCase
             $json->where('id', 10)
                 ->where('title', 'House')
                 ->where('level', 0)
-                ->etc()
+                ->where('children', json_decode($children, true))
+                ->where('parent_id', null)
             )
         );
     }
