@@ -9,6 +9,7 @@ services:
       dockerfile: ./.docker/php/Dockerfile
     volumes:
       - ./:/var/www/html
+      - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     environment:
       - APP_ENV=local
     networks:

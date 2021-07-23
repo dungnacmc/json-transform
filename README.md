@@ -40,6 +40,7 @@
 5. Run test:
    
         php artisan test
+        vendor/bin/phpunit --coverage-html reports (require Xdebug extension)
 
 Run in browser: http://localhost
 
@@ -73,6 +74,8 @@ Run in browser: http://localhost
         
         docker-compose exec php php artisan test (run test)
    
+        docker-compose exec php vendor/bin/phpunit --coverage-html reports (run code coverage)
+
         docker-compose stop (stop running containers)
    
         docker-compose down (remove running containers)
