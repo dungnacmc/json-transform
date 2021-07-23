@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+
 class PaginationRequest extends FormRequest
 {
     /**
@@ -34,5 +35,4 @@ class PaginationRequest extends FormRequest
             'item_per_page.numeric' => 'item_per_page must be numeric!',
         ];
     }
-   
 }

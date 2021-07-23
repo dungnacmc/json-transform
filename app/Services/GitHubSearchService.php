@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Psr7\Header;
 
 class GitHubSearchService
 {
@@ -74,31 +75,6 @@ class GitHubSearchService
     }
 
     /**
-     * Separate a chain of link
-     * @param mixed $header
-     * @return array
-     */
-    function normalize($header): array
-    {
-        if (!is_array($header)) {
-            return array_map('trim', explode(',', $header));
-        }
-        $result = [];
-        foreach ($header as $value) {
-            foreach ((array) $value as $v) {
-                if (strpos($v, ',') === false) {
-                    $result[] = $v;
-                    continue;
-                }
-                foreach (preg_split('/,(?=([^"]*"[^"]*")*[^"]*$)/', $v) as $vv) {
-                    $result[] = trim($vv);
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
      * Get url in link header
      * @param mixed $header
      * @return array
@@ -108,7 +84,7 @@ class GitHubSearchService
         static $trimmed = "\"'  \n\t\r";
         $params = $matches = [];
 
-        foreach ($this->normalize($header) as $val) {
+        foreach (Header::normalize($header) as $val) {
             $part = [];
             foreach (preg_split('/;(?=([^"]*"[^"]*")*[^"]*$)/', $val) as $kvp) {
                 if (preg_match_all('/<[^>]+>|[^=]+/', $kvp, $matches)) {
