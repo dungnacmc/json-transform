@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/transform/{pattern}', 'JsonController@transform');
+Route::get('/json/{pattern}', 'JsonController@transform');
