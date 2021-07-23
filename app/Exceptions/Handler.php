@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 use Illuminate\Http\Response;
 
@@ -38,29 +39,29 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-		
-		$this->renderable(function (Throwable $e, $request) {
-			if ($request->is('api/*')) {
-				return $this->handleApiExceptionResponse($e);
-			}
-		});
+
+        $this->renderable(function (Throwable $e, $request) {
+            if ($request->is('api/*')) {
+                return $this->handleApiExceptionResponse($e);
+            }
+        });
     }
-	
-	
-	/**
+
+
+    /**
      * Custom API exception response message
-     * @param \Throwable $e
-     * @return \Illuminate\Http\JsonResponse
+     * @param Throwable $e
+     * @return JsonResponse
      */
-    private function handleApiExceptionResponse($e)
+    private function handleApiExceptionResponse(Throwable $e): JsonResponse
     {
-		$statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         if (method_exists($e, 'getStatusCode')) {
             $statusCode = $e->getStatusCode();
         }
 
         $response = [];
-		$response['success'] = false;
+        $response['success'] = false;
 
         switch ($statusCode) {
             case Response::HTTP_UNAUTHORIZED:
@@ -85,9 +86,7 @@ class Handler extends ExceptionHandler
                 break;
 
             default:
-                $response['message'] = ($statusCode == Response::HTTP_INTERNAL_SERVER_ERROR)
-                                        ? 'Internal server error'
-                                        : $e->getMessage();
+                $response['message'] = 'Internal server error';
                 break;
         }
 
