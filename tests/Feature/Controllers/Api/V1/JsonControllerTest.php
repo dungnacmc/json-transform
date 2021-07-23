@@ -77,7 +77,7 @@ class JsonControllerTest extends TestCase
         "2": [{"id": 17, "title": "Blue Window", "level": 2, "children": [], "parent_id": 12}, {"id": 16, "title": "Door",
         "level": 2, "children": [], "parent_id": 13}, {"id": 15, "title": "Red Window", "level": 2, "children": [],
         "parent_id": 12}]}';
-        
+
         $response = $this->getJson('/api/v1/json/' . str_replace(PHP_EOL, '', $json));
 
         $children = str_replace(PHP_EOL, '', '[{"id": 12, "title": "Red Roof", "level": 1,
