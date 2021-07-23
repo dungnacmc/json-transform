@@ -6,35 +6,33 @@ use Illuminate\Support\Facades\Http;
 
 class GitHubSearchService
 {
-    function getDataSearch($page = 0, $per_page = 0, $seek_method = '')
+    function getDataSearch($page = 0, $perPage = 0, $seek_method = '')
     {
-        $str_page = '';
-        $str_per_page = '';
-        if ($per_page !== 0) {
-            $str_per_page = '&per_page=' . $per_page;
+        $strPage = '';
+        $strPerPage = '';
+        if ($perPage !== 0) {
+            $strPerPage = '&per_page=' . $perPage;
         }
         if ($page !== 0) {
-            $str_page = '&page=' . $page;
+            $strPage = '&page=' . $page;
         }
         if ($seek_method &&  $seek_method != '') {
-            $char_replace = [
-                '<', '>'
-            ];
+            $charReplace = ['<', '>'];
             $url = session('page_info')[$seek_method];
-            $url = str_replace($char_replace, '', $url);
+            $url = str_replace($charReplace, '', $url);
             $response = Http::get($url);
         } else {
-            $response = Http::get('https://api.github.com/search/code?q=addClass+user:mozilla' . $str_per_page . $str_page);
+            $response = Http::get('https://api.github.com/search/code?q=addClass+user:mozilla' . $strPerPage . $strPage);
         }
         $links = $this->parseLink($response->header('Link'));
-        $pagination_info =  $this->getInfoPagination($links);
-        preg_match('/&page=(\d+).*$/', $pagination_info['last_page_href'], $number_of_pages);
+        $paginationInfo =  $this->getInfoPagination($links);
+        preg_match('/&page=(\d+).*$/', $paginationInfo['last_page_href'], $numberOfPages);
         $body = json_decode($response->body());
         session(['page_info' => $this->getInfoPagination($links)]);
         return [
-            'total_count' => $body->total_count ?? 0,
-            'items' => $body->items ?? [],
-            'number_of_pages' => $number_of_pages
+            'total_count'       => $body->total_count ?? 0,
+            'items'             => $body->items ?? [],
+            'number_of_pages'   => $numberOfPages
         ];
     }
     /**
@@ -44,26 +42,26 @@ class GitHubSearchService
      */
     function getInfoPagination($links)
     {
-        $prev_page_href = '';
-        $next_page_href = '';
-        $last_page_href = '';
-        $first_page_href = '';
+        $prevPageHref = '';
+        $nextPageHref = '';
+        $lastPageHref = '';
+        $firstPageHref = '';
         foreach ($links as $link) {
             if ($link['rel'] == 'prev') {
-                $prev_page_href = $link[0];
+                $prevPageHref = $link[0];
             } else if ($link['rel'] == 'next') {
-                $next_page_href = $link[0];
+                $nextPageHref = $link[0];
             } else if ($link['rel'] == 'last') {
-                $last_page_href = $link[0];
+                $lastPageHref = $link[0];
             } else if ($link['rel'] == 'first') {
-                $first_page_href = $link[0];
+                $firstPageHref = $link[0];
             }
         }
         return [
-            'prev_page_href' => $prev_page_href,
-            'next_page_href' => $next_page_href,
-            'last_page_href' => $last_page_href,
-            'first_page_href' => $first_page_href
+            'prev_page_href'  => $prevPageHref,
+            'next_page_href'  => $nextPageHref,
+            'last_page_href'  => $lastPageHref,
+            'first_page_href' => $firstPageHref
         ];
     }
     /**
@@ -76,7 +74,6 @@ class GitHubSearchService
         if (!is_array($header)) {
             return array_map('trim', explode(',', $header));
         }
-
         $result = [];
         foreach ($header as $value) {
             foreach ((array) $value as $v) {
