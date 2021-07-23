@@ -230,14 +230,27 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-	
-	/*
-	|-------------------------------------------
-	| Current API Version
-	|-------------------------------------------
-	| That is the default API version of your API (Last version).
-	| The idea is that if there is no version when calling the API, it  | will be used this one.
-	*/
-	'api_latest'  => '1',
+
+    /*
+    |-------------------------------------------
+    | Current API Version
+    |-------------------------------------------
+    | That is the default API version of your API (Last version).
+    | The idea is that if there is no version when calling the API, it will be used this one.
+    */
+    'api_latest'  => '1',
+
+    /*
+    |-------------------------------------------
+    | GitHub API Search
+    |-------------------------------------------
+    | The Search API helps you search for the specific item you want to find.
+    | For example, you can find a user or a specific file in a repository.
+    | GitHub Search API provides up to 1,000 results for each search.
+    */
+    'github'  => [
+         'search' => 'https://api.github.com/search/',
+         'per_page' => 10
+    ],
 
 ];
