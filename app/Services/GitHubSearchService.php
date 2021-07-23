@@ -32,7 +32,7 @@ class GitHubSearchService
         } else {
             $response = Http::get('https://api.github.com/search/code?q=addClass+user:mozilla' . $strPerPage . $strPage);
         }
-        $links = $this->parseLink($response->header('Link'));
+        $links = Header::parse($response->header('Link'));
         $paginationInfo =  $this->getInfoPagination($links);
         preg_match('/&page=(\d+).*$/', $paginationInfo['last_page_href'], $numberOfPages);
         $body = json_decode($response->body());
@@ -72,35 +72,5 @@ class GitHubSearchService
             'last_page_href'  => $lastPageHref,
             'first_page_href' => $firstPageHref
         ];
-    }
-
-    /**
-     * Get url in link header
-     * @param mixed $header
-     * @return array
-     */
-    function parseLink($header): array
-    {
-        static $trimmed = "\"'  \n\t\r";
-        $params = $matches = [];
-
-        foreach (Header::normalize($header) as $val) {
-            $part = [];
-            foreach (preg_split('/;(?=([^"]*"[^"]*")*[^"]*$)/', $val) as $kvp) {
-                if (preg_match_all('/<[^>]+>|[^=]+/', $kvp, $matches)) {
-                    $m = $matches[0];
-                    if (isset($m[1])) {
-                        $part[trim($m[0], $trimmed)] = trim($m[1], $trimmed);
-                    } else {
-                        $part[] = trim($m[0], $trimmed);
-                    }
-                }
-            }
-            if ($part) {
-                $params[] = $part;
-            }
-        }
-
-        return $params;
     }
 }
