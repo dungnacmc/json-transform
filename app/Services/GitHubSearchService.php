@@ -6,7 +6,14 @@ use Illuminate\Support\Facades\Http;
 
 class GitHubSearchService
 {
-    function getDataSearch($page = 0, $perPage = 0, $seek_method = '')
+    /**
+     * Get data search page
+     * @param int $page
+     * @param int $perPage
+     * @param string $seekMethod
+     * @return array
+     */
+    function getDataSearch(int $page = 0, int $perPage = 0, string $seekMethod = ''): array
     {
         $strPage = '';
         $strPerPage = '';
@@ -16,9 +23,9 @@ class GitHubSearchService
         if ($page !== 0) {
             $strPage = '&page=' . $page;
         }
-        if ($seek_method &&  $seek_method != '') {
+        if ($seekMethod &&  $seekMethod != '') {
             $charReplace = ['<', '>'];
-            $url = session('page_info')[$seek_method];
+            $url = session('page_info')[$seekMethod];
             $url = str_replace($charReplace, '', $url);
             $response = Http::get($url);
         } else {
@@ -35,12 +42,13 @@ class GitHubSearchService
             'number_of_pages'   => $numberOfPages
         ];
     }
+
     /**
      * get url of pagination
      * @param mixed $links
      * @return array
      */
-    function getInfoPagination($links)
+    function getInfoPagination($links): array
     {
         $prevPageHref = '';
         $nextPageHref = '';
@@ -64,10 +72,11 @@ class GitHubSearchService
             'first_page_href' => $firstPageHref
         ];
     }
+
     /**
-     * seprate a chain of link 
-     * @param mixed $header 
-     * @return array 
+     * Separate a chain of link
+     * @param mixed $header
+     * @return array
      */
     function normalize($header): array
     {
@@ -88,12 +97,13 @@ class GitHubSearchService
         }
         return $result;
     }
+
     /**
-     * get url in link header
+     * Get url in link header
      * @param mixed $header
      * @return array
      */
-    function parseLink($header)
+    function parseLink($header): array
     {
         static $trimmed = "\"'  \n\t\r";
         $params = $matches = [];
