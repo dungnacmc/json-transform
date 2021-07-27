@@ -38,9 +38,10 @@
        sudo chmod -R ug+rwx storage bootstrap/cache
 
 5. Run test:
-        php artisan cache:clear (clear cache before run test)
-        php artisan test
-        vendor/bin/phpunit --coverage-html reports (require Xdebug extension)
+   
+       php artisan cache:clear (clear cache before run test)
+       php artisan test
+       vendor/bin/phpunit --coverage-html reports (require Xdebug extension)
 
 Run in browser: http://localhost
 
