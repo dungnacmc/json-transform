@@ -10,7 +10,7 @@ class JsonServiceTest extends TestCase
     /**
      * @var JsonService
      */
-    protected $jsonService;
+    protected JsonService $jsonService;
 
 
     protected function setUp():void
@@ -30,16 +30,6 @@ class JsonServiceTest extends TestCase
         $this->assertIsArray($this->jsonService->isJson('[]'));
     }
 
-    /**
-     * Test isObject method
-     *
-     * @return void
-     */
-    public function testIsObject()
-    {
-        $this->assertFalse($this->jsonService->isObject(['try']));
-        $this->assertIsArray($this->jsonService->isObject((object)[]));
-    }
 
     /**
      * Test setMessage method

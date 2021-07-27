@@ -27,7 +27,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string|null
      */
     // protected $namespace = 'App\\Http\\Controllers';
-	
+
 	/** @var string $apiNamespace */
 	protected $apiNamespace ='App\Http\Controllers\Api';
 
@@ -45,7 +45,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
-				
+
 			Route::prefix('api/v1')
                 ->middleware(['api', 'api_version:v1'])
                 ->namespace("{$this->apiNamespace}\V1")
@@ -64,7 +64,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
-        RateLimiter::for('api', function (Request $request) {
+        RateLimiter::for('api/1', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
