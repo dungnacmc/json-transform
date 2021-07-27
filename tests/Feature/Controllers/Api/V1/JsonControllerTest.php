@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Api\V1;
 
+use App\Services\JsonService;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Illuminate\Http\Response;
@@ -24,19 +25,57 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * Test incorrect object input.
-     *
-     * @return void
+     *  Test validate object properties
      */
-    public function testIncorrectObject()
+    public function testValidateObj()
     {
-        $response = $this->getJson('/api/v1/json/[{}]');
-
+        $json = '{"0": [{"id": 10, "title": "House", "children": [], "parent_id": null}]}';
+        $response = $this->getJson('/api/v1/json/' . $json);
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJson([
             'success' => false,
-            'message' => 'Incorrect object',
-        ]);;
+            'message' => 'Missing property: ' . JsonService::LEVEL,
+        ]);
     }
+
+    /**
+     *  Test validate value of id property
+     */
+    public function testValidateIDProperty()
+    {
+        $json = '{"0": [{"id": "try", "title": "House", "level": 0, "children": [], "parent_id": null}]}';
+        $response = $this->getJson('/api/v1/json/' . $json);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJson([
+            'success' => false,
+            'message' => 'Invalid ID value',
+        ]);
+    }
+
+    /**
+     *  Test validate value of level property
+     */
+    public function testValidateLevelProperty()
+    {
+        $json = '{"0": [{"id": 10, "title": "House", "level": -1, "children": [], "parent_id": null}]}';
+        $response = $this->getJson('/api/v1/json/' . $json);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJson([
+            'success' => false,
+            'message' => 'Invalid level value',
+        ]);
+    }
+
+    /**
+     *  Test validate value of children property
+     */
+    public function testValidateChildrenProperty()
+    {
+        $json = '{"0": [{"id": 10, "title": "House", "level": 0, "children": 2, "parent_id": null}]}';
+        $response = $this->getJson('/api/v1/json/' . $json);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJson([
+            'success' => false,
+            'message' => 'Invalid children value',
+        ]);
+    }
+
 
     /**
      * Test not found exception.
