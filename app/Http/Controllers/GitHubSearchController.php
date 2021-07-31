@@ -20,6 +20,7 @@ class GitHubSearchController extends Controller
         $itemPerPage    = $request->item_per_page ?? config('app.github.per_page');
         $seekMethod     = $request->seek_method ?? '';
         $data           = $gitHubSearchService->getDataSearch($page, $itemPerPage, $seekMethod);
+
         $dataResponse = [
             'total_count'       => $data['total_count'],
             'items'             => $data['items'],
